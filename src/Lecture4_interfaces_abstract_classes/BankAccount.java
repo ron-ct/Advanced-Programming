@@ -8,10 +8,18 @@ public class BankAccount {
     }
 
 
+    /**
+     * 
+     * @return balance that is not negative
+    */
     public double getBalance() {
         return balance;
     }
 
+    /**
+     * 
+     * @param balance must be a positive number
+    */
     public void setBalance(double balance) {
         this.balance = balance;
     }

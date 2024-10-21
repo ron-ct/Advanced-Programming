@@ -7,7 +7,14 @@ public class BaseTransaction implements TransactionInterface {
     private final Calendar date;
     private final String transactionID;
 
-    public BaseTransaction(int amount, Calendar date){
+    /**
+     * 
+     * @param amount must be a double that is a positive number
+     * @param date must be a calendar object, cannot be null
+     * initializes the fields of the transaction
+     * creates objects of this
+    */
+    public BaseTransaction(double amount, Calendar date){
         this.amount = amount;
         this.date = (Calendar) date.clone();
         int uniqNum = (int) Math.random()*10000;

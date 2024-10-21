@@ -1,28 +1,94 @@
-import Lecture1_adt.*; // Import all classes from Lecture1_adt package to be used in this client code
+//import Lecture1_adt.*; // Import all classes from Lecture1_adt package to be used in this client code
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.intellij.lang.annotations.JdkConstants.CalendarMonth;
+
+import Lecture4_interfaces_abstract_classes.*;
+
+public class Main {
+
+    public static void getBankAccBalance(BankAccount ba){
+        
+        System.out.println("Bank Account Balance: " + ba.getBalance());
+
+    }
+    public static void setBankAccBalance(BankAccount ba, double amount){
+        ba.setBalance(amount);
+        System.out.println("Balance is now: " + ba.getBalance());
+    }
+    
+    public static void testCreateNewDeposit(double amount, Calendar date, BankAccount ba){
+        DepositTransaction Student1Payment = new DepositTransaction(amount, date);
+        Student1Payment.printTransactionDetails();
+        getBankAccBalance(ba);
+        Student1Payment.apply(ba);
+        getBankAccBalance(ba);
+
+
+    }
+
+    public static void testCreateNewWithdraw(double amount, Calendar date, BankAccount ba) throws InsufficientFundsException{
+        WithdrawalTransaction payRollWithdraw = new WithdrawalTransaction(amount, date);
+        payRollWithdraw.printTransactionDetails();
+        getBankAccBalance(ba);
+        payRollWithdraw.apply(ba);
+        getBankAccBalance(ba);
+
+    }
+
+    public static void testWithdrawReversal (WithdrawalTransaction wt, BankAccount ba) throws InsufficientFundsException{
+        wt.apply(ba);
+        getBankAccBalance(ba);
+        wt.reverse(ba);
+        getBankAccBalance(ba);
+    }
+
+/**
+ * 
+ * @param maxWithdraw is a transaction that has a value larger than the available balance
+ * @param ba must be a BankAccount Object
+ * @throws InsufficientFundsException
+*/
+    public static void testWithdrawOverLimit(WithdrawalTransaction maxWithdraw, BankAccount ba) throws InsufficientFundsException{
+        maxWithdraw.apply(ba, true);
+        getBankAccBalance(ba);
+        
+
+    }
+
+    public static void main(String[] args) {
+        BankAccount JKUATFees = new BankAccount(1000000);
+        Calendar d1 = new GregorianCalendar();
+        DepositTransaction myDeposit = new DepositTransaction(20000, d1);
+        WithdrawalTransaction LargeWithdrawal = new WithdrawalTransaction(100000000000000.0, d1);
+
+        testBankAccount();
+        testDepositFunctionality(20000, d1);
+    }
+
+
+}
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 /*
 * Client Code for accessing the Lecture1_adt.TransactionInterface.java module
  */
-public class Main {
 
-    public static void testTransaction1() {
-        Calendar d1 = new GregorianCalendar(); // d1 is an Object [Objects are Reference types]
-        Lecture1_adt.Transaction1 t1 = new Lecture1_adt.Transaction1(1000, d1); // amount and d1 are arguments
+   // public static void testTransaction1() {
+   //     Calendar d1 = new GregorianCalendar(); // d1 is an Object [Objects are Reference types]
+   //     Lecture1_adt.Transaction1 t1 = new Lecture1_adt.Transaction1(1000, d1); // amount and d1 are arguments
 
-        System.out.println(t1.toString());
-        System.out.println("Lecture1_adt.TransactionInterface Amount: \t " + t1.amount);
-        System.out.println("Lecture1_adt.TransactionInterface Date: \t " + t1.date);
-
+    //    System.out.println(t1.toString());
+      //  System.out.println("Lecture1_adt.TransactionInterface Amount: \t " + t1.amount);
+//        System.out.println("Lecture1_adt.TransactionInterface Date: \t " + t1.date);
+//
         // Please note that the Client Codes can access the data in the class directly through the dot operator
         // This kind of exposure is a threat to both the Representation Independence and Preservation of Invariants
-    }
+  //  }
 
 
     /** @return a transaction of same amount as t, one month later
@@ -30,78 +96,78 @@ public class Main {
      * This code will help demostrate the Design exposures still present in transaction2 class
      * */
 
-    public static Transaction2 makeNextPayment(Transaction2 t) {
-        Calendar d =  t.getDate();
-        d.add(Calendar.MONTH, 1);
-        return new Transaction2(t.getAmount(), d);
-    }
+//    public static Transaction2 makeNextPayment(Transaction2 t) {
+ //       Calendar d =  t.getDate();
+  //      d.add(Calendar.MONTH, 1);
+  //      return new Transaction2(t.getAmount(), d);
+  //  }
 
     /*
     Testing Transaction2 class
      */
-    public static void testTransaction2() {
+//    public static void testTransaction2() {
 
-        Calendar d1 = new GregorianCalendar();
+  //      Calendar d1 = new GregorianCalendar();
 
-        Lecture1_adt.Transaction2 t = new Lecture1_adt.Transaction2(1000, d1);
-
-        Lecture1_adt.Transaction2 modified_t = makeNextPayment(t);
-
-        System.out.println("\n\nState of the Object T1 After Client Code Tried to Change the Amount");
-        System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+modified_t.getAmount());
-        System.out.println("Lecture1_adt.TransactionInterface Date: \t "+modified_t.getDate().getTime());
-
-        System.out.println("\n\nHow does T2 Look Like?????");
-        System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+modified_t.getAmount());
-        System.out.println("Lecture1_adt.TransactionInterface Date: \t "+modified_t.getDate().getTime());
+    //    Lecture1_adt.Transaction2 t = new Lecture1_adt.Transaction2(1000, d1);
+//
+  //      Lecture1_adt.Transaction2 modified_t = makeNextPayment(t);
+//
+ //       System.out.println("\n\nState of the Object T1 After Client Code Tried to Change the Amount");
+ //       System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+modified_t.getAmount());
+  //      System.out.println("Lecture1_adt.TransactionInterface Date: \t "+modified_t.getDate().getTime());
+//
+  //      System.out.println("\n\nHow does T2 Look Like?????");
+    //    System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+modified_t.getAmount());
+      //  System.out.println("Lecture1_adt.TransactionInterface Date: \t "+modified_t.getDate().getTime());
 
         /* Please note that Although we have solved the problem of Transaction1
         * And client code can no longer use the dot (.) operator to directly access the data
         * There is still some exposure especially if we pass an object of a previous Transaction2 to create a new Transaction2 object
          */
 
-    }
+  //  }
 
 
     /** @return a list of 12 monthly payments of identical amounts
      * This code will help demostrate the Design exposures still present in transaction3 class
      * */
-    public static List<Transaction3> makeYearOfPayments (int amount) throws NullPointerException {
+   // public static List<Transaction3> makeYearOfPayments (int amount) throws NullPointerException {
 
-        List<Transaction3> listOfTransaction3s = new ArrayList<Transaction3>();
-        Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
+   //     List<Transaction3> listOfTransaction3s = new ArrayList<Transaction3>();
+   //     Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
 
 
-        for (int i = 0; i < 12; i++) {
-            listOfTransaction3s.add(new Transaction3(amount, date));
-            date.add(Calendar.MONTH, 1);
-        }
-        return listOfTransaction3s;
-    }
+    //    for (int i = 0; i < 12; i++) {
+    //        listOfTransaction3s.add(new Transaction3(amount, date));
+    //        date.add(Calendar.MONTH, 1);
+    //    }
+ //       return listOfTransaction3s;
+  //  }
 
     /*
-    Testing Transaction3 class
+//    Testing Transaction3 class
      */
-    public static void testTransaction3() {
+  //  public static void testTransaction3() {
 
-        List<Transaction3> allPaymentsIn2024 = makeYearOfPayments(1000);
+    //    List<Transaction3> allPaymentsIn2024 = makeYearOfPayments(1000);
 
-        for (Transaction3 t3 : allPaymentsIn2024) {
+      //  for (Transaction3 t3 : allPaymentsIn2024) {
 
             // Display all the 12 Transactions
-            for (Transaction3 transact : allPaymentsIn2024) {
-                System.out.println("\n\n  ::::::::::::::::::::::::::::::::::::::::::::\n");
-                System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+transact.getAmount());
-                System.out.println("Lecture1_adt.TransactionInterface Date: \t "+transact.getDate().getTime());
-            }
-        }
+        //    for (Transaction3 transact : allPaymentsIn2024) {
+          //      System.out.println("\n\n  ::::::::::::::::::::::::::::::::::::::::::::\n");
+         //       System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+transact.getAmount());
+         //       System.out.println("Lecture1_adt.TransactionInterface Date: \t "+transact.getDate().getTime());
+//            }
+  //      }
 
         /* Please Check all the 12 transactions displayed and hwo their dates look like
          * Note that Although Transaction3 class resolves to an extent the exposure in Transaction2 class
          * There is still some exposure especially if we pass an object of a previous Transaction3 to create a
          * new Transaction3 object
          */
-    }
+ //   }
 
 
     /** @return a list of 12 monthly payments of identical amounts
@@ -109,42 +175,42 @@ public class Main {
      * As defined in the constructor of Transaction4 class
      * */
 
-    public static List<Transaction4> makeYearOfPaymentsFinal (int amount) throws NullPointerException {
+//    public static List<Transaction4> makeYearOfPaymentsFinal (int amount) throws NullPointerException {
+//
+//        List<Transaction4> listOfTransaction4s = new ArrayList<Transaction4>();
+//        Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
+//
 
-        List<Transaction4> listOfTransaction4s = new ArrayList<Transaction4>();
-        Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
-
-
-        for (int i = 0; i < 12; i++) {
-            listOfTransaction4s.add(new Transaction4(amount, date));
-            date.add(Calendar.MONTH, 1);
-        }
-        return listOfTransaction4s;
-    }
+//        for (int i = 0; i < 12; i++) {
+//            listOfTransaction4s.add(new Transaction4(amount, date));
+//            date.add(Calendar.MONTH, 1);
+//        }
+//        return listOfTransaction4s;
+//    }
 
     /*
     Testing Transaction3 class
      */
-    public static void testTransaction4() {
+//    public static void testTransaction4() {
 
         /*
          * Call the function to make all the Twelve transaction in a year of our business
          */
 
-        List<Transaction4> transactionsIn2024 = makeYearOfPaymentsFinal(1200);
+//        List<Transaction4> transactionsIn2024 = makeYearOfPaymentsFinal(1200);
 
         // Display all the 12 Transactions
-        for (Transaction4 transact : transactionsIn2024) {
-            System.out.println("\n\n  ::::::::::::::::::::::::::::::::::::::::::::\n");
-            System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+transact.getAmount());
-            System.out.println("Lecture1_adt.TransactionInterface Date: \t "+transact.getDate().getTime());
-        }
+//        for (Transaction4 transact : transactionsIn2024) {
+//            System.out.println("\n\n  ::::::::::::::::::::::::::::::::::::::::::::\n");
+//            System.out.println("Lecture1_adt.TransactionInterface Amount: \t "+transact.getAmount());
+//            System.out.println("Lecture1_adt.TransactionInterface Date: \t "+transact.getDate().getTime());
+//        }
 
         // Please Take a look at all the 12 transaction now and compare with the outputs of the Transaction3 class
-    }
+//    }
 
 
-    public static void main(String[] args) {
+  //  public static void main(String[] args) {
         // This is the client code
         // Uncomment the following lines to test the class which you would like to test
 
@@ -152,5 +218,5 @@ public class Main {
         // testTransaction2()
         // testTransaction3()
         // testTransaction4()
-    }
-}
+  //  }
+//}

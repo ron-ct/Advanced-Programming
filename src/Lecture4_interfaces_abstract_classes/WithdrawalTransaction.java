@@ -3,12 +3,22 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
 public class WithdrawalTransaction extends BaseTransaction {
-    public WithdrawalTransaction(int amount, @NotNull Calendar date) {
+    public WithdrawalTransaction(double amount, @NotNull Calendar date) {
         super(amount, date);
     }
 
-    private boolean checkAmount(int amt) {
-        return amt >= 0;
+    /**
+     * 
+     * @param amt is double
+     * @return boolean
+    */
+    private boolean checkAmount(double amt) {
+        if (amt < 0){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     // Method to print a transaction receipt or details
@@ -47,14 +57,40 @@ public class WithdrawalTransaction extends BaseTransaction {
         }
     }
 
+    //overloaded Method apply
+    public void apply(BankAccount ba, boolean isFullWithdraw) throws InsufficientFundsException{
+        try{
+            double bank_balance = ba.getBalance();
+            double withdrawal_request_amount = getAmount();
+
+            if (bank_balance < 1){
+                throw new InsufficientFundsException("There are currently no funds to Withdraw");
+            }
+
+            if (bank_balance < withdrawal_request_amount){
+                if(isFullWithdraw){
+                    System.out.println("Withdrawing all your remaining balance" + bank_balance);
+                    double remainder_withdrawal = withdrawal_request_amount - bank_balance;
+                    ba.setBalance(0);
+                    System.out.println(remainder_withdrawal + "cannot be withdrawn due to lack of funds.");
+                }
+                
+            }
+            else{ apply(ba); }
+        }
+        catch(InsufficientFundsException e){
+            e.getMessage();
+        }
+    }
+
 
     // Method to reverse the transaction
     public boolean reverse(BankAccount ba) {
-        double amount_transaction = getAmount();
-        double latest_balance = new_balance;
+        double withdrawal_request_amount = getAmount();
+        double latest_balance = ba.getBalance();
 
         // Add the withdrawn amount back to the balance to reverse the transaction
-        new_balance = latest_balance + amount_transaction;
+        new_balance = latest_balance + withdrawal_request_amount;
         ba.setBalance(new_balance);
         return true;
     }
