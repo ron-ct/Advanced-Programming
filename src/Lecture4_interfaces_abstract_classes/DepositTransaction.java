@@ -5,8 +5,9 @@ import org.jetbrains.annotations.ApiStatus.OverrideOnly;
 
 import java.util.Calendar;
 
-public class DepositTrasaction extends BaseTransaction {
-    public DepositTrasaction(int amount, @NotNull Calendar date){
+public class DepositTransaction extends BaseTransaction {
+
+    public DepositTransaction(int amount, @NotNull Calendar date){
         super(amount, date);
     }
 

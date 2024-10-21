@@ -40,7 +40,7 @@ public class BaseTransaction implements TransactionInterface {
         System.out.println("-----------------------------------------------------------------------");
     }
 
-    public void apply(BankAccount ba){
+    public void apply(BankAccount ba) throws InsufficientFundsException{
         System.out.println("Applying the basetransaction...");
         
     }
