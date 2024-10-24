@@ -32,7 +32,7 @@ public class DepositTransaction extends BaseTransaction {
     // Method to print a transaction receipt or details
     @Override
     public void printTransactionDetails(){
-        System.out.println("Deposit Transaction: "+ this.toString());
+        super.printTransactionDetails();
     }
 
     //Method to apply the transaction to the bank account

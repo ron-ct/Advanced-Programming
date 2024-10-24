@@ -23,7 +23,7 @@ public class WithdrawalTransaction extends BaseTransaction {
 
     // Method to print a transaction receipt or details
     public void printTransactionDetails() {
-        System.out.println("Withdrawal Transaction: " + this.toString());
+        super.printTransactionDetails();
     }
 
     double new_balance;
@@ -41,17 +41,31 @@ public class WithdrawalTransaction extends BaseTransaction {
                 new_balance = curr_balance - getAmount();
                 ba.setBalance(new_balance);
 
-                // Ask user if they want to reverse the transaction
-                Scanner sc = new Scanner(System.in);
-                System.out.println("Do you wish to reverse your transaction? (Y) or (N)");
-                String userAnswer = sc.nextLine().toLowerCase();
-                sc.close();
+                System.out.println("Dear Customer, your bank balance is: KES"+ ba.getBalance());
 
-                // Using equals to compare string values
+            // Ask user if they want to reverse the transaction
+            Scanner sc = new Scanner(System.in);  // Do not close this if you're reading input multiple times
+            System.out.println("Do you wish to reverse your transaction? (Y) or (N)");
+
+            if (sc.hasNextLine()) {  // Check if there's a next line to avoid NoSuchElementException
+                String userAnswer = sc.nextLine().trim().toLowerCase();
+
+                // Compare the string using .equals
                 if (userAnswer.equals("y")) {
-                reverse(ba);
+                    boolean result = reverse(ba);  // Call the reverse method if the user selects "Y"
+                    if(result){
+                        System.out.println("Successfully reversed your transaction of KES "+getAmount());
+                        return;
+                    }
                 }
+                else {System.out.println("You have successfully withdrawn KES" +getAmount()+" from your bank account.");
+                }
+            } else {
+                System.out.println("No input provided.");
             }
+
+
+        }
       catch (InsufficientFundsException e) {
             // Handle the insufficient funds exception
             System.out.println("Error: " + e.getMessage());
@@ -70,10 +84,11 @@ public class WithdrawalTransaction extends BaseTransaction {
 
             if (bank_balance < withdrawal_request_amount){
                 if(isFullWithdraw){
-                    System.out.println("Withdrawing all your remaining balance" + bank_balance);
+                    System.out.println("Withdrawing all your remaining balance KES" + bank_balance);
                     double remainder_withdrawal = withdrawal_request_amount - bank_balance;
                     ba.setBalance(0);
-                    System.out.println(remainder_withdrawal + "cannot be withdrawn due to lack of funds.");
+                    System.out.println("KES" + remainder_withdrawal + " cannot be withdrawn due to lack of funds.");
+                    System.out.println("You have successfully withdrawn KES"+ bank_balance + ". Your Bank balance is KES"+ba.getBalance());
                 }
                 
             }
@@ -93,6 +108,7 @@ public class WithdrawalTransaction extends BaseTransaction {
         // Add the withdrawn amount back to the balance to reverse the transaction
         new_balance = latest_balance + withdrawal_request_amount;
         ba.setBalance(new_balance);
+        System.out.println("The bank balance is now KES "+ ba.getBalance());
         return true;
     }
 }

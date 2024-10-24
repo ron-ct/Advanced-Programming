@@ -11,7 +11,7 @@ public class Main {
 
     public static void getBankAccBalance(BankAccount ba){
         
-        out.println("Bank Account Balance: " + ba.getBalance());
+        out.println("The Bank Account Balance is: KES " + ba.getBalance());
 
     }
     public static void setBankAccBalance(BankAccount ba, double amount){
@@ -48,8 +48,9 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
         BaseWithdraw.printTransactionDetails();
-        getBankAccBalance(ba);
+        System.out.println("Your Bank balance is KES"+ba.getBalance());
 
+        //Test the InsufficientFundsException
         // Insufficient Balance for Withdrawal but casting scenario
         WithdrawalTransaction largeW = new WithdrawalTransaction(771897118912515.0, new GregorianCalendar() );
         BaseTransaction largeWDBase = (BaseTransaction) largeW;
@@ -59,7 +60,7 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
         largeWDBase.printTransactionDetails();
-        System.out.println("After large withdrawal attempt: Balance = " + ba.getBalance());
+        System.out.println("Your Bank Balance is KES" +ba.getBalance());
 
     }
     
@@ -76,18 +77,19 @@ public class Main {
     public static void testCreateNewWithdraw(double amount, Calendar date, BankAccount ba) throws InsufficientFundsException{
         WithdrawalTransaction payRollWithdraw = new WithdrawalTransaction(amount, date);
         payRollWithdraw.printTransactionDetails();
-        getBankAccBalance(ba);
+        System.out.println("Currently your bank balance KES"+ ba.getBalance());
         payRollWithdraw.apply(ba);
-        getBankAccBalance(ba);
+        System.out.println("Your balance is KES"+ ba.getBalance());
 
     }
 
-    public static void testWithdrawReversal (WithdrawalTransaction wt, BankAccount ba) throws InsufficientFundsException{
+    public static void testWithdrawAndReversal (WithdrawalTransaction wt, BankAccount ba) throws InsufficientFundsException{
+        System.out.println("Testing the withdraw and reversal functionality...");
+        System.out.println("Currently your bank balance is: "+ ba.getBalance());
         wt.apply(ba);
-        getBankAccBalance(ba);
-        wt.reverse(ba);
-        getBankAccBalance(ba);
+        System.out.println("Your bank balance is KES"+ ba.getBalance());
         wt.printTransactionDetails();
+
     }
 
 /**
@@ -96,6 +98,8 @@ public class Main {
  * @param ba must be a BankAccount Object
  */
     public static void testWithdrawOverLimit(WithdrawalTransaction maxWithdraw, BankAccount ba) throws InsufficientFundsException{
+        System.out.println("Currently testing Withdraw over limit");
+        System.out.println("Dear customer, your available balance is KES"+ba.getBalance());
         maxWithdraw.apply(ba, true);
         getBankAccBalance(ba);
         maxWithdraw.printTransactionDetails();
@@ -111,10 +115,12 @@ public class Main {
 
         getBankAccBalance(JKUATFees);
         setBankAccBalance(JKUATFees, 5000000.0);
+        testBaseTransaction(26317, d1, JKUATFees);
         testCreateNewDeposit(100000, d1, JKUATFees);
         testCreateNewWithdraw(10001.0, d1, JKUATFees);
-        testWithdrawReversal(smalleWithdrawalTransaction, JKUATFees);
+        testWithdrawAndReversal(smalleWithdrawalTransaction, JKUATFees);
         testWithdrawOverLimit(LargeWithdrawal, JKUATFees);
+        testBehaviourTypeCastBaseType(JKUATFees);
 
         }
 
