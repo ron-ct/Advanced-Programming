@@ -45,6 +45,7 @@ public class WithdrawalTransaction extends BaseTransaction {
                 Scanner sc = new Scanner(System.in);
                 System.out.println("Do you wish to reverse your transaction? (Y) or (N)");
                 String userAnswer = sc.nextLine().toLowerCase();
+                sc.close();
 
                 // Using equals to compare string values
                 if (userAnswer.equals("y")) {

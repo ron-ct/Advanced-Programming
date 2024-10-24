@@ -1,6 +1,8 @@
 package Lecture4_interfaces_abstract_classes;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 public class BaseTransaction implements TransactionInterface {
     private final double amount;
@@ -17,7 +19,7 @@ public class BaseTransaction implements TransactionInterface {
     public BaseTransaction(double amount, Calendar date){
         this.amount = amount;
         this.date = (Calendar) date.clone();
-        int uniqNum = (int) Math.random()*10000;
+        int uniqNum = (int) (Math.random() * 10000);
         this.transactionID = date.toString()+uniqNum;
 
     }
@@ -26,29 +28,31 @@ public class BaseTransaction implements TransactionInterface {
     public double getAmount(){
         return amount;
 
-    };
+    }
 
     // Method to get the transaction date
     public Calendar getDate(){
         return (Calendar) date.clone();
 
-    };
+    }
 
     // Method to get a unique identifier for the transaction
     public String getTransactionID(){
         return transactionID;
 
-    };
+    }
 
     public void printTransactionDetails(){
         System.out.println("TransactionID: " + getTransactionID());
         System.out.println("Amount: " + getAmount());
-        System.out.println("Date: " + getDate());
+        System.out.println("Date: " + getDate().getTime());
         System.out.println("-----------------------------------------------------------------------");
     }
 
     public void apply(BankAccount ba) throws InsufficientFundsException{
-        System.out.println("Applying the basetransaction...");
+        //placeholder. does not modify the balance is just a general implementation.
+        //specific implementation is in the subclasses
+        System.out.println("BaseTransaction's apply method called. No change in the balance for this type of transaction ");
         
     }
 }

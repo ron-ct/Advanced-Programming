@@ -2,23 +2,65 @@
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.intellij.lang.annotations.JdkConstants.CalendarMonth;
 
 import Lecture4_interfaces_abstract_classes.*;
+
+import static java.lang.System.out;
 
 public class Main {
 
     public static void getBankAccBalance(BankAccount ba){
         
-        System.out.println("Bank Account Balance: " + ba.getBalance());
+        out.println("Bank Account Balance: " + ba.getBalance());
 
     }
     public static void setBankAccBalance(BankAccount ba, double amount){
         ba.setBalance(amount);
-        System.out.println("Balance is now: " + ba.getBalance());
+        out.println("Balance is now: " + ba.getBalance());
+    }
+
+    public static void testBaseTransaction(double amt,Calendar date, BankAccount ba) throws InsufficientFundsException {
+        BaseTransaction bt = new BaseTransaction(amt, date);
+        bt.apply(ba);
+        bt.printTransactionDetails();
+    }
+    //Casting subtype object to the base type object and testing behaviour of the apply() method
+    public static void testBehaviourTypeCastBaseType(BankAccount ba) throws InsufficientFundsException {
+        //create a deposit transaction object
+        DepositTransaction dt = new DepositTransaction(10310, new GregorianCalendar());
+        //create a withdrawal transaction object
+        WithdrawalTransaction wt = new WithdrawalTransaction(5420, new GregorianCalendar());
+
+        //cast the Deposit transaction object to BaseTransaction
+        BaseTransaction BaseDeposit = (BaseTransaction) dt;
+        //cast the Withdrawal transaction object into BaseTransaction
+        BaseTransaction BaseWithdraw = (BaseTransaction) wt;
+        BaseDeposit.apply(ba);
+        BaseDeposit.printTransactionDetails();
+        out.println("The new balance is: " + ba.getBalance());
+        out.println("-------------------------------------------------");
+
+        out.println("Before Withdrawal, Balance is: " + ba.getBalance());
+        try{
+            BaseWithdraw.apply(ba);
+        }
+        catch (InsufficientFundsException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+        BaseWithdraw.printTransactionDetails();
+        getBankAccBalance(ba);
+
+        // Insufficient Balance for Withdrawal but casting scenario
+        WithdrawalTransaction largeW = new WithdrawalTransaction(771897118912515.0, new GregorianCalendar() );
+        BaseTransaction largeWDBase = (BaseTransaction) largeW;
+        try {
+            largeWDBase.apply(ba);  // This should trigger InsufficientFundsException
+        } catch (InsufficientFundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        largeWDBase.printTransactionDetails();
+        System.out.println("After large withdrawal attempt: Balance = " + ba.getBalance());
+
     }
     
     public static void testCreateNewDeposit(double amount, Calendar date, BankAccount ba){
@@ -45,30 +87,36 @@ public class Main {
         getBankAccBalance(ba);
         wt.reverse(ba);
         getBankAccBalance(ba);
+        wt.printTransactionDetails();
     }
 
 /**
  * 
  * @param maxWithdraw is a transaction that has a value larger than the available balance
  * @param ba must be a BankAccount Object
- * @throws InsufficientFundsException
-*/
+ */
     public static void testWithdrawOverLimit(WithdrawalTransaction maxWithdraw, BankAccount ba) throws InsufficientFundsException{
         maxWithdraw.apply(ba, true);
         getBankAccBalance(ba);
+        maxWithdraw.printTransactionDetails();
         
 
     }
 
-    public static void main(String[] args) {
-        BankAccount JKUATFees = new BankAccount(1000000);
+    public static void main(String[] args) throws InsufficientFundsException {
+        BankAccount JKUATFees = new BankAccount(1000000.0);
         Calendar d1 = new GregorianCalendar();
-        DepositTransaction myDeposit = new DepositTransaction(20000, d1);
         WithdrawalTransaction LargeWithdrawal = new WithdrawalTransaction(100000000000000.0, d1);
+        WithdrawalTransaction smalleWithdrawalTransaction = new WithdrawalTransaction(10001, d1);
 
-        testBankAccount();
-        testDepositFunctionality(20000, d1);
-    }
+        getBankAccBalance(JKUATFees);
+        setBankAccBalance(JKUATFees, 5000000.0);
+        testCreateNewDeposit(100000, d1, JKUATFees);
+        testCreateNewWithdraw(10001.0, d1, JKUATFees);
+        testWithdrawReversal(smalleWithdrawalTransaction, JKUATFees);
+        testWithdrawOverLimit(LargeWithdrawal, JKUATFees);
+
+        }
 
 
 }
@@ -91,18 +139,7 @@ public class Main {
   //  }
 
 
-    /** @return a transaction of same amount as t, one month later
-     * This is a PRODUCER of the class Lecture1_adt.Transaction2
-     * This code will help demostrate the Design exposures still present in transaction2 class
-     * */
-
-//    public static Transaction2 makeNextPayment(Transaction2 t) {
- //       Calendar d =  t.getDate();
-  //      d.add(Calendar.MONTH, 1);
-  //      return new Transaction2(t.getAmount(), d);
-  //  }
-
-    /*
+/*
     Testing Transaction2 class
      */
 //    public static void testTransaction2() {
@@ -129,23 +166,7 @@ public class Main {
   //  }
 
 
-    /** @return a list of 12 monthly payments of identical amounts
-     * This code will help demostrate the Design exposures still present in transaction3 class
-     * */
-   // public static List<Transaction3> makeYearOfPayments (int amount) throws NullPointerException {
-
-   //     List<Transaction3> listOfTransaction3s = new ArrayList<Transaction3>();
-   //     Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
-
-
-    //    for (int i = 0; i < 12; i++) {
-    //        listOfTransaction3s.add(new Transaction3(amount, date));
-    //        date.add(Calendar.MONTH, 1);
-    //    }
- //       return listOfTransaction3s;
-  //  }
-
-    /*
+/*
 //    Testing Transaction3 class
      */
   //  public static void testTransaction3() {
@@ -170,25 +191,7 @@ public class Main {
  //   }
 
 
-    /** @return a list of 12 monthly payments of identical amounts
-     * This code Show that by judicious copying and defensive programming we eliminate the exposure in Transaction3
-     * As defined in the constructor of Transaction4 class
-     * */
-
-//    public static List<Transaction4> makeYearOfPaymentsFinal (int amount) throws NullPointerException {
-//
-//        List<Transaction4> listOfTransaction4s = new ArrayList<Transaction4>();
-//        Calendar date = new GregorianCalendar(2024, Calendar.JANUARY, 3);
-//
-
-//        for (int i = 0; i < 12; i++) {
-//            listOfTransaction4s.add(new Transaction4(amount, date));
-//            date.add(Calendar.MONTH, 1);
-//        }
-//        return listOfTransaction4s;
-//    }
-
-    /*
+/*
     Testing Transaction3 class
      */
 //    public static void testTransaction4() {
