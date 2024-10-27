@@ -4,12 +4,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
+/**
+ * Represents a deposit transaction to a bank account
+ * This class implements BaseTransaction and applies funds to specified BankAccount
+ * The DepositTransaction is irreversible
+ */
 public class DepositTransaction extends BaseTransaction {
 
     /**
-     * 
-     * @param amount is a positive number >= 0
-     * @param date not null
+     * Constructs a DepositTransaction with specified amount and date
+     * @param amount the amount to deposit, must be positive
+     * @param date date transaction occurs, not null
     */
     public DepositTransaction(double amount, @NotNull Calendar date){
         super(amount, date);
@@ -38,8 +43,11 @@ public class DepositTransaction extends BaseTransaction {
     //Method to apply the transaction to the bank account
 
     /**
-     * @param ba must be a BankAccount object and not null
-     *
+     * Applies a deposit transaction to the specified bank account.
+     * This method verifies the deposit amount using the checkAmount method.
+     * If the amount is valid, it adds the deposit amount to the current balance of the bank
+     * account and updates the balance.
+     * @param ba the BankAccount to which the deposit amount is added
      */
     @Override
     public void apply(BankAccount ba){

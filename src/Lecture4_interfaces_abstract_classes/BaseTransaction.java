@@ -32,7 +32,7 @@ public class BaseTransaction implements TransactionInterface {
 
     // Method to get the transaction date
     public Calendar getDate(){
-        return (Calendar) date.clone();
+        return (Calendar) date.clone(); //judicious defensive copying
 
     }
 

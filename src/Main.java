@@ -7,24 +7,59 @@ import Lecture4_interfaces_abstract_classes.*;
 
 import static java.lang.System.out;
 
+/**
+ * The Main class provides utility methods for testing various types of bank transactions
+ * (deposit, withdrawal, and base transactions). Each test verifies transaction behavior
+ * and balance updates within the BankAccount class.
+ */
 public class Main {
 
+    /**
+     * Prints the current balance of the specified bank account.
+     *
+     * @param ba the BankAccount object whose balance is being printed
+     */
     public static void getBankAccBalance(BankAccount ba){
         
-        out.println("The Bank Account Balance is: KES " + ba.getBalance());
+        System.out.println("The Bank Account Balance is: KES " + ba.getBalance());
 
     }
+
+    /**
+     * Sets the balance of the specified bank account to the given amount and prints the updated balance.
+     *
+     * @param ba the BankAccount object whose balance is being set
+     * @param amount the amount to set as the new balance
+     */
     public static void setBankAccBalance(BankAccount ba, double amount){
         ba.setBalance(amount);
-        out.println("Balance is now: " + ba.getBalance());
+        System.out.println("Balance is now: " + ba.getBalance());
     }
 
+    /**
+     * Tests the behavior of a BaseTransaction, applies it to the specified BankAccount,
+     * and prints the transaction details.
+     *
+     * @param amt the amount of the transaction
+     * @param date the date of the transaction
+     * @param ba the BankAccount to which the transaction will be applied
+     * @throws InsufficientFundsException if funds are insufficient for the transaction
+     */
     public static void testBaseTransaction(double amt,Calendar date, BankAccount ba) throws InsufficientFundsException {
         BaseTransaction bt = new BaseTransaction(amt, date);
         bt.apply(ba);
         bt.printTransactionDetails();
     }
+
+
     //Casting subtype object to the base type object and testing behaviour of the apply() method
+    /**
+     * Demonstrates casting DepositTransaction and WithdrawalTransaction instances to the
+     * BaseTransaction type and tests the apply() method and printTransactionDetails() methods.
+     *
+     * @param ba the BankAccount object to which transactions are applied
+     * @throws InsufficientFundsException if a withdrawal amount exceeds available funds
+     */
     public static void testBehaviourTypeCastBaseType(BankAccount ba) throws InsufficientFundsException {
         //create a deposit transaction object
         DepositTransaction dt = new DepositTransaction(10310, new GregorianCalendar());
@@ -63,7 +98,14 @@ public class Main {
         System.out.println("Your Bank Balance is KES" +ba.getBalance());
 
     }
-    
+
+    /**
+     * Creates and applies a new DepositTransaction, displaying the account balance before and after the deposit.
+     *
+     * @param amount the deposit amount
+     * @param date the date of the deposit
+     * @param ba the BankAccount to which the deposit is applied
+     */
     public static void testCreateNewDeposit(double amount, Calendar date, BankAccount ba){
         DepositTransaction Student1Payment = new DepositTransaction(amount, date);
         Student1Payment.printTransactionDetails();
@@ -74,6 +116,14 @@ public class Main {
 
     }
 
+    /**
+     * Creates and applies a new WithdrawalTransaction, displaying the account balance before and after the withdrawal.
+     *
+     * @param amount the withdrawal amount
+     * @param date the date of the withdrawal
+     * @param ba the BankAccount from which funds are withdrawn
+     * @throws InsufficientFundsException if the withdrawal exceeds available funds
+     */
     public static void testCreateNewWithdraw(double amount, Calendar date, BankAccount ba) throws InsufficientFundsException{
         WithdrawalTransaction payRollWithdraw = new WithdrawalTransaction(amount, date);
         payRollWithdraw.printTransactionDetails();
@@ -83,6 +133,13 @@ public class Main {
 
     }
 
+    /**
+     * Tests the withdrawal and reverse functionality of a specified WithdrawalTransaction.
+     *
+     * @param wt the WithdrawalTransaction to apply and possibly reverse
+     * @param ba the BankAccount from which funds are withdrawn and potentially restored
+     * @throws InsufficientFundsException if the withdrawal exceeds available funds
+     */
     public static void testWithdrawAndReversal (WithdrawalTransaction wt, BankAccount ba) throws InsufficientFundsException{
         System.out.println("Testing the withdraw and reversal functionality...");
         System.out.println("Currently your bank balance is: "+ ba.getBalance());
@@ -92,11 +149,14 @@ public class Main {
 
     }
 
-/**
- * 
- * @param maxWithdraw is a transaction that has a value larger than the available balance
- * @param ba must be a BankAccount Object
- */
+    /**
+     * Tests withdrawing an amount greater than the available balance, allowing a partial withdrawal and
+     * printing any remaining balance.
+     *
+     * @param maxWithdraw a WithdrawalTransaction with a higher amount than the available balance
+     * @param ba the BankAccount from which funds are withdrawn
+     * @throws InsufficientFundsException if the transaction exceeds available funds
+     */
     public static void testWithdrawOverLimit(WithdrawalTransaction maxWithdraw, BankAccount ba) throws InsufficientFundsException{
         System.out.println("Currently testing Withdraw over limit");
         System.out.println("Dear customer, your available balance is KES"+ba.getBalance());
@@ -107,10 +167,11 @@ public class Main {
 
     }
 
+
     public static void main(String[] args) throws InsufficientFundsException {
         BankAccount JKUATFees = new BankAccount(1000000.0);
         Calendar d1 = new GregorianCalendar();
-        WithdrawalTransaction LargeWithdrawal = new WithdrawalTransaction(100000000000000.0, d1);
+        WithdrawalTransaction LargeWithdrawal = new WithdrawalTransaction(100000000000000.0, d1);//I have used a very large withdrawal amount for testing purposes
         WithdrawalTransaction smalleWithdrawalTransaction = new WithdrawalTransaction(10001, d1);
 
         getBankAccBalance(JKUATFees);

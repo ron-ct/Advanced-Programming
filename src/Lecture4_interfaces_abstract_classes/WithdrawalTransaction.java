@@ -2,7 +2,18 @@ package Lecture4_interfaces_abstract_classes;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The WithdrawalTransaction class represents a transaction to withdraw funds from a bank account.
+ * This transaction can be reversed of necessary
+ * Extends the BasteTransaction class and provides specific implementation for withdrawal transactions
+ * @see BaseTransaction
+ */
 public class WithdrawalTransaction extends BaseTransaction {
+    /**
+     *Constructs a WithdrawalTransaction with specified amount and date
+     * @param amount the amount to withdraw.  amount must be  positive
+     * @param date the date the transaction occurs
+     */
     public WithdrawalTransaction(double amount, @NotNull Calendar date) {
         super(amount, date);
     }
@@ -29,6 +40,13 @@ public class WithdrawalTransaction extends BaseTransaction {
     double new_balance;
 
 
+
+    /**
+     * Applies the withdrawal transaction to the specified bank account
+     * If the account has insufficient funds, it throws an InsufficientFundsException
+     * @param ba the BankAccount to which this transaction applies
+     * @throws InsufficientFundsException if the balance in the account is insufficient for the withdrawal
+     */
     @Override
     public void apply(BankAccount ba) throws InsufficientFundsException {
         try {
@@ -73,6 +91,18 @@ public class WithdrawalTransaction extends BaseTransaction {
     }
 
     //overloaded Method apply
+    /**
+     * Attempts to apply a withdrawal transaction to the specified bank account
+     * This method withdraws the full transaction if the account balance is sufficient
+     * If the bank account balance is insufficient and the InsufficientFundsException Flag is set to true,
+     * it withdraws the entire available balance
+     * the remaining amount that could not be withdrawn is displayed as a message to the user
+     * Throws InsufficientFunds exception if no funds are available, balance < 1
+     * @param ba the BankAccount from which the withdrawal is requested
+     * @param isFullWithdraw if true, withdraws entire available balance when
+     *                       balance is less than requested amount
+     * @throws InsufficientFundsException if there are no funds in the bank account, if account balance < 1
+     */
     public void apply(BankAccount ba, boolean isFullWithdraw) throws InsufficientFundsException{
         try{
             double bank_balance = ba.getBalance();
@@ -101,6 +131,13 @@ public class WithdrawalTransaction extends BaseTransaction {
 
 
     // Method to reverse the transaction
+    /**
+     * Reverses a withdrawal transaction on the specified bank account
+     * This method adds the original withdrawal amount back to the current balance of
+     * the bank account, effectively reversing the transaction
+     * @param ba the BankAccount object on which the bank account balance is reversed
+     * @return true to indicate that transaction was successfully reversed
+     */
     public boolean reverse(BankAccount ba) {
         double withdrawal_request_amount = getAmount();
         double latest_balance = ba.getBalance();
